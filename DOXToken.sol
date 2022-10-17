@@ -1,3 +1,7 @@
+/**
+ *Submitted for verification at BscScan.com on 2022-10-02
+*/
+
 // SPDX-License-Identifier: MIT
 /**
 # Welcome to PRODOX
@@ -6,7 +10,7 @@
 */
 
 pragma solidity 0.8.2;
-contract Token {
+contract PRODOXToken {
     string public name = "PRODOX";
     string public symbol = "DOX";
     uint8 public decimals = 18;
