@@ -1,5 +1,5 @@
 /**
- *Submitted for verification at BscScan.com on 2022-10-02
+ *Submitted for verification at Etherscan.io on 2023-02-09
 */
 
 // SPDX-License-Identifier: MIT
@@ -9,12 +9,22 @@
    Official Community: https://t.me/Prodox_io
 */
 
-pragma solidity 0.8.2;
-contract PRODOXToken {
-    string public name = "PRODOX";
-    string public symbol = "DOX";
-    uint8 public decimals = 18;
+
+pragma solidity ^0.8.0;
+
+contract Token {
+    string public name = "Prodox Ecosystem";
+    string public symbol = "DoX";
     uint256 public totalSupply = 0;
+    uint256 public decimals = 18;
+   
+    
+    mapping (address => uint256) public balances;
+    mapping (address => mapping (address => uint256)) public allowed;    
+    mapping (address => uint256) public stakingStartTimestamps;
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
+    mapping(address => bool) public isIssuer;
 
     address public owner;
     modifier restricted {
@@ -25,25 +35,18 @@ contract PRODOXToken {
         require(isIssuer[msg.sender], "You do not have issuer rights");
         _;
     }
-
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-    mapping(address => bool) public isIssuer;
+  
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event IssuerRights(address indexed issuer, bool value);
     event TransferOwnership(address indexed previousOwner, address indexed newOwner);
 
+
+
+
     function getOwner() public view returns (address) {
         return owner;
-    }
-
-    function mint(address _to, uint256 _amount) public issuerOnly returns (bool success) {
-        totalSupply += _amount;
-        balanceOf[_to] += _amount;
-        emit Transfer(address(0), _to, _amount);
-        return true;
     }
 
     function burn(uint256 _amount) public issuerOnly returns (bool success) {
@@ -60,20 +63,18 @@ contract PRODOXToken {
         emit Transfer(_from, address(0), _amount);
         return true;
     }
-
     function approve(address _spender, uint256 _amount) public returns (bool success) {
         allowance[msg.sender][_spender] = _amount;
         emit Approval(msg.sender, _spender, _amount);
         return true;
     }
-
+    
     function transfer(address _to, uint256 _amount) public returns (bool success) {
         balanceOf[msg.sender] -= _amount;
         balanceOf[_to] += _amount;
         emit Transfer(msg.sender, _to, _amount);
         return true;
     }
-
     function transferFrom( address _from, address _to, uint256 _amount) public returns (bool success) {
         allowance[_from][msg.sender] -= _amount;
         balanceOf[_from] -= _amount;
@@ -83,7 +84,7 @@ contract PRODOXToken {
     }
 
     function transferOwnership(address _newOwner) public restricted {
-        require(_newOwner != address(0), "Invalid address: should not be 0x0");
+        require(_newOwner != address(1), "Invalid address: should not be 0x1");
         emit TransferOwnership(owner, _newOwner);
         owner = _newOwner;
     }
@@ -92,9 +93,13 @@ contract PRODOXToken {
         isIssuer[_issuer] = _value;
         emit IssuerRights(_issuer, _value);
     }
-
-    constructor() {
-        owner = msg.sender;
-        emit TransferOwnership(address(0), msg.sender);
+    constructor() 
+    {
+    totalSupply += 500000000*1e18;
+    balanceOf[msg.sender] += totalSupply;
+    emit Transfer(address(0), msg.sender, 500000000*1e18);
+    owner = msg.sender;
+    emit TransferOwnership(address(0), msg.sender);
     }
+    
 }
